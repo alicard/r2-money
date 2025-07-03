@@ -21,7 +21,7 @@ const RECIPIENT    = wallet.address;
 // Swap settings
 const R2_DECIMALS = 18;
 const R2USD_DECIMALS = 18;
-const AMOUNT_IN_R2 = "4500"; // Ganti ini
+const AMOUNT_IN_R2 = "3600"; // Ganti ini
 const SLIPPAGE_PERCENT = 2;
 const DEADLINE = Math.floor(Date.now() / 1000) + 60 * 10; // 10 menit dari sekarang
 
@@ -43,24 +43,23 @@ async function main() {
   console.log(`Min. R2 to receive (after ${SLIPPAGE_PERCENT}% slippage): ${ethers.formatUnits(amountOutMin, R2_DECIMALS)}\n`);
 
   // --- 3. Swap ---
-//  try {
-//    const tx = await router.swapExactTokensForTokens(
-//      amountIn,
-//      amountOutMin,
-//      path,
-//      RECIPIENT,
-//      DEADLINE,
-//      {
-//        gasLimit: 200000
-//      }
-//    );
-//    console.log("🚀 Transaction sent:", tx.hash);
-//    const receipt = await tx.wait();
-//    console.log("✅ Confirmed in tx:", receipt.hash);
-//  } catch (err) {
-//    console.error("❌ Swap failed:", err.reason || err);
-//  }
+  try {
+    const tx = await router.swapExactTokensForTokens(
+      amountIn,
+      amountOutMin,
+      path,
+      RECIPIENT,
+      DEADLINE,
+      {
+        gasLimit: 200000
+      }
+    );
+    console.log("🚀 Transaction sent:", tx.hash);
+    const receipt = await tx.wait();
+    console.log("✅ Confirmed in tx:", receipt.hash);
+  } catch (err) {
+    console.error("❌ Swap failed:", err.reason || err);
+  }
 }
 
 main();
-
