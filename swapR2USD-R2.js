@@ -14,33 +14,33 @@ const routerAbi = [
 ];
 
 // Token info
-const USDC_ADDRESS = "0x8bebfcbe5468f146533c182df3dfbf5ff9be00e2";
 const R2_ADDRESS   = "0xb816bb88f836ea75ca4071b46ff285f690c43bb7";
+const R2USD_ADDRESS = "0x9e8FF356D35a2Da385C546d6Bf1D77ff85133365";
 const RECIPIENT    = wallet.address;
 
 // Swap settings
-const USDC_DECIMALS = 6;
 const R2_DECIMALS = 18;
-const AMOUNT_IN_USDC = "2270"; // Ganti ini
+const R2USD_DECIMALS = 18;
+const AMOUNT_IN_R2USD = "130"; // Ganti ini
 const SLIPPAGE_PERCENT = 2;
 const DEADLINE = Math.floor(Date.now() / 1000) + 60 * 10; // 10 menit dari sekarang
 
 const router = new ethers.Contract(routerAddress, routerAbi, wallet);
 
 async function main() {
-  const amountIn = ethers.parseUnits(AMOUNT_IN_USDC, USDC_DECIMALS);
-  const path = [USDC_ADDRESS, R2_ADDRESS];
+  const amountIn = ethers.parseUnits(AMOUNT_IN_R2USD, R2USD_DECIMALS);
+  const path = [R2USD_ADDRESS, R2_ADDRESS];
 
   // --- 1. Get rate ---
   const amountsOut = await router.getAmountsOut(amountIn, path);
-  const estimatedR2 = amountsOut[1];
-  const ratePerUSDC = parseFloat(ethers.formatUnits(estimatedR2, R2_DECIMALS)) / parseFloat(AMOUNT_IN_USDC);
-  console.log(`\nEstimated Rate: 1 USDC ≈ ${ratePerUSDC.toFixed(6)} R2`);
+  const estimatedR2USD = amountsOut[1];
+  const ratePerR2 = parseFloat(ethers.formatUnits(estimatedR2USD, R2USD_DECIMALS)) / parseFloat(AMOUNT_IN_R2USD);
+  console.log(`\nEstimated Rate: 1 R2USD≈ ${ratePerR2.toFixed(6)} R2USD`);
 
   // --- 2. Apply slippage ---
-  const amountOutMin = estimatedR2 * BigInt(100 - SLIPPAGE_PERCENT) / 100n;
-  console.log(`Swapping ${AMOUNT_IN_USDC} USDC`);
-  console.log(`Min. R2 to receive (after ${SLIPPAGE_PERCENT}% slippage): ${ethers.formatUnits(amountOutMin, R2_DECIMALS)}\n`);
+  const amountOutMin = estimatedR2USD * BigInt(100 - SLIPPAGE_PERCENT) / 100n;
+  console.log(`Swapping ${AMOUNT_IN_R2USD} R2`);
+  console.log(`Min. R2 to receive (after ${SLIPPAGE_PERCENT}% slippage): ${ethers.formatUnits(amountOutMin, R2USD_DECIMALS)}\n`);
 
   // --- 3. Swap ---
   try {
@@ -63,4 +63,3 @@ async function main() {
 }
 
 main();
-
